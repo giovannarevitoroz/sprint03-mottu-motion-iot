@@ -2,7 +2,6 @@
 
 **Projeto de rastreamento e gestão de motos em pátios da Mottu utilizando IoT, Node-RED e MySQL.**
 
----
 
 ## 1. Descrição
 
@@ -22,8 +21,6 @@ O Mottu Mottion digitaliza e automatiza o controle de motos com:
 * Dashboards em Node-RED;
 * Armazenamento direto em MySQL.
 
----
-
 ## 2. Objetivos
 
 * Automatizar o controle de motos no pátio;
@@ -31,8 +28,6 @@ O Mottu Mottion digitaliza e automatiza o controle de motos com:
 * Monitorar setores em tempo real;
 * Armazenar histórico de movimentações para análise;
 * Disponibilizar interface visual intuitiva via dashboards Node-RED.
-
----
 
 ## 3. Arquitetura do Sistema
 
@@ -44,18 +39,12 @@ O Mottu Mottion digitaliza e automatiza o controle de motos com:
    * LEDs indicadores de status;
    * Comunicação via Wi-Fi e MQTT.
 
-2. **Backend (Java + Spring Boot)**
-
-   * Opcional: API RESTful para registro e consulta de motos;
-   * Integração com banco MySQL;
-   * Regras de negócio e validações.
-
-3. **Banco de Dados (MySQL)**
+2. **Banco de Dados (MySQL)**
 
    * Registra movimentações, motos, setores, funcionários e clientes;
    * Tabelas principais: `dados_moto_sensor`, `motos`, `patios`, `usuarios`, `funcionarios`, `vagas`.
 
-4. **Interface Node-RED**
+3. **Interface Node-RED**
 
    * Recebe dados via MQTT;
    * Salva diretamente no MySQL;
