@@ -50,7 +50,6 @@ O Mottu Mottion digitaliza e automatiza o controle de motos com:
    * Salva diretamente no MySQL;
    * Atualiza dashboards em tempo real (gauges, contadores e filtros por setor/status).
 
----
 
 ### 3.2 Comunicação IoT
 
@@ -81,7 +80,6 @@ Cada setor possui Wi-Fi dedicado, e cada sensor ESP32 monitora o setor correspon
 
 4. Cada alteração de LED/status é publicada de volta via MQTT.
 
----
 
 ### 3.3 Comunicação MQTT
 
@@ -92,7 +90,6 @@ Cada setor possui Wi-Fi dedicado, e cada sensor ESP32 monitora o setor correspon
 
 **Benefícios:** comunicação bidirecional, baixo consumo de banda e suporte a múltiplos sensores/dashboards.
 
----
 
 ### 3.4 Node-RED + MySQL sem API
 
@@ -103,7 +100,6 @@ Cada setor possui Wi-Fi dedicado, e cada sensor ESP32 monitora o setor correspon
 
 **Vantagens:** menor latência, simplicidade e histórico completo de movimentações.
 
----
 
 ### 3.5 Estrutura de Banco de Dados
 
@@ -122,8 +118,6 @@ CREATE TABLE dados_moto_sensor (
 ```
 
 Outras tabelas: `motos`, `patios`, `funcionarios`, `vagas`.
-
----
 
 ## 4. Implementação do Firmware ESP32
 
@@ -152,8 +146,6 @@ Outras tabelas: `motos`, `patios`, `funcionarios`, `vagas`.
 3. Aguarda comandos de alteração;
 4. Atualiza status e republica periodicamente.
 
----
-
 ## 5. Interface Node-RED
 
 * Dashboard responsivo com gauges para cada setor;
@@ -163,7 +155,6 @@ Outras tabelas: `motos`, `patios`, `funcionarios`, `vagas`.
 
 > Não é necessário utilizar API intermediária para registro de movimentações.
 
----
 
 ## 6. Backend Java + Spring Boot (Opcional)
 
@@ -176,8 +167,6 @@ Outras tabelas: `motos`, `patios`, `funcionarios`, `vagas`.
   * `POST /movimentacao` – Registra movimentação
   * `GET /dashboards/setores` – Contagem de motos por setor
 
----
-
 ## 7. Diferenciais
 
 * Modularidade e escalabilidade;
@@ -186,7 +175,6 @@ Outras tabelas: `motos`, `patios`, `funcionarios`, `vagas`.
 * Rastreabilidade completa da frota;
 * Integração total: IoT + Node-RED + MySQL.
 
----
 
 ## 8. Ferramentas Utilizadas
 
@@ -199,8 +187,6 @@ Outras tabelas: `motos`, `patios`, `funcionarios`, `vagas`.
   * Sensor 3: [Link](https://wokwi.com/projects/442741385511878657)
   * Sensor 4: [Link](https://wokwi.com/projects/442741436895251457)
 
----
-
 ## 9. Conclusão
 
 O **Mottu Mottion** oferece:
@@ -210,16 +196,12 @@ O **Mottu Mottion** oferece:
 * Dashboards intuitivos e atualizações automáticas;
 * Histórico de movimentações para análise e otimização de processos.
 
----
-
 ## 10. Roadmap Futuro
 
 * Integração com aplicação mobile para clientes e funcionários;
 * Dashboard em tempo real com Node-RED e Grafana;
 * Relatórios em PDF e Excel;
 * Expansão para monitoramento via IoT em escala.
-
----
 
 ## 11. Authors
 
