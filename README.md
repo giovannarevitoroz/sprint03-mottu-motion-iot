@@ -44,11 +44,6 @@ O Mottu Mottion digitaliza e automatiza o controle de motos com:
    * LEDs indicadores de status
    * Comunicação via Wi-Fi e MQTT
 
-2. **Backend (Java + Spring Boot)**
-
-   * Opcional: API RESTful para registro e consulta de motos
-   * Integração com banco MySQL
-
 3. **Banco de Dados**
 
    * MySQL para registros de movimentações, motos, setores, funcionários e clientes
@@ -172,5 +167,3 @@ O **Mottu Mottion** oferece:
 * Giovanna Revito Roz – RM558981
 * Kaian Gustavo de Oliveira Nascimento – RM558986
 * Lucas Kenji Kikuchi – RM554424
-
-Quer que eu faça isso?
