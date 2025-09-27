@@ -47,6 +47,63 @@ O Mottu Mottion digitaliza e automatiza o controle de motos com:
 * Armazenar histórico de movimentações para análise;
 * Disponibilizar interface visual intuitiva via dashboards Node-RED.
 
+## 3. Fluxo de Dados – Diagrama Visual
+
+```mermaid
+flowchart LR
+    A[ESP32 Sensor 1-4] -->|Publica dados JSON| B[MQTT Broker]
+    B --> C[Node-RED: mqtt in]
+    C --> D[Function: Insert MySQL]
+    D --> E[MySQL: dados_moto_sensor]
+    C --> F[Function: Contar por Setor]
+    F --> G[Switch: Separar por Setor]
+    G --> H[Dashboard Node-RED: Gauges/caixinhas]
+    B --> I[Node-RED: Controle LEDs]
+    I --> A
+```
+
+**Explicação do diagrama:**
+
+* **ESP32:** detecta movimentação ou mudança de setor.
+* **MQTT Broker:** distribui a mensagem para Node-RED e permite controle de LEDs.
+* **Node-RED:** processa dados, decide se insere no banco, atualiza contadores por setor e envia para dashboards.
+* **MySQL:** armazena histórico de movimentações apenas se houver alteração real de setor.
+* **Dashboard:** visualização clara e intuitiva em tempo real, estilo Grafana.
+
+---
+
+**Descrição detalhada do fluxo:**
+
+1. **ESP32 / Sensores IoT:**
+
+   * Cada sensor monitora uma moto e publica dados JSON via MQTT ao detectar movimento ou mudança de setor.
+   * LEDs indicam status do veículo por cor.
+
+2. **MQTT Broker:**
+
+   * Recebe e retransmite mensagens para Node-RED e para controle de LEDs.
+   * Permite comunicação bidirecional.
+
+3. **Node-RED:**
+
+   * Nó `mqtt in` recebe dados;
+   * `Function Insert MySQL` compara setor atual x setor anterior;
+
+     * Se mudou → insere no MySQL;
+     * Se não mudou → não insere, evitando duplicidade;
+   * `Function Contar por Setor` calcula quantas motos estão em cada setor;
+   * `Switch Separar por Setor` envia dados para gauges no Dashboard.
+
+4. **MySQL:**
+
+   * Tabela principal: `dados_moto_sensor`;
+   * Armazena histórico de movimentações, permitindo consultas e relatórios.
+
+5. **Dashboard Node-RED:**
+
+   * Gauges estilo caixinhas/Grafana mostram quantidade de motos por setor;
+   * Atualização em tempo real.
+
 ---
 
 ## 4. Arquitetura do Sistema
@@ -115,8 +172,8 @@ Cada setor possui Wi-Fi dedicado, e cada sensor ESP32 monitora o setor correspon
 ### 4.3 Comunicação MQTT
 
 * Broker: `broker.hivemq.com`
-* Tópico de publicação: `iot/mottu-mottion/sensormo`
-* Tópico de assinatura (controle LEDs): `iot/mottu-mottion/statusled`
+* Tópico de publicação: `iot/mottu-mottion/status`
+* Tópico de assinatura (controle LEDs): `iot/mottu-mottion/comandos`
 * Protocolo: MQTT sobre TCP (porta 1883)
 
 **Benefícios:** comunicação bidirecional, baixo consumo de banda e suporte a múltiplos sensores/dashboards.
@@ -201,20 +258,7 @@ ESP32->>MQTT: Atualiza status
 
 ---
 
-## 7. Backend Java + Spring Boot (Opcional)
-
-* Gerencia motos, setores, funcionários e clientes;
-* Persistência via Spring Data JPA;
-* Endpoints principais:
-
-  * `GET /motos` – Lista motos
-  * `POST /motos` – Cadastra nova moto
-  * `POST /movimentacao` – Registra movimentação
-  * `GET /dashboards/setores` – Contagem de motos por setor
-
----
-
-## 8. Diferenciais
+## 7. Diferenciais
 
 * Modularidade e escalabilidade;
 * Atualizações em tempo real via MQTT;
@@ -224,7 +268,7 @@ ESP32->>MQTT: Atualiza status
 
 ---
 
-## 9. Ferramentas Utilizadas
+## 8. Ferramentas Utilizadas
 
 * **Hardware:** ESP32, LEDs, sensores simulados via Wokwi
 * **Software:** Node-RED, Arduino IDE, Java + Spring Boot, MySQL, MQTT Broker HiveMQ
@@ -237,7 +281,7 @@ ESP32->>MQTT: Atualiza status
 
 ---
 
-## 10. Conclusão
+## 9. Conclusão
 
 O **Mottu Mottion** oferece:
 
@@ -248,7 +292,7 @@ O **Mottu Mottion** oferece:
 
 ---
 
-## 11. Roadmap Futuro
+## 10. Roadmap Futuro
 
 * Integração com aplicação mobile para clientes e funcionários;
 * Dashboard em tempo real com Node-RED e Grafana;
@@ -257,7 +301,7 @@ O **Mottu Mottion** oferece:
 
 ---
 
-## 12. Authors
+## 11. Authors
 
 * Giovanna Revito Roz – RM558981
 * Kaian Gustavo de Oliveira Nascimento – RM558986
