@@ -271,7 +271,7 @@ O **Mottu Mottion** oferece:
 
 ---
 
-## 12. Imagens do Projeto
+## 12. Imagens de RESULTADOS PARCIAIS
 
 <img width="1914" height="951" alt="Dashboard principal" src="https://github.com/user-attachments/assets/d96ee82f-ad51-4a9e-a626-953874876914" />  
 <img width="1908" height="945" alt="Detalhe do dashboard Node-RED" src="https://github.com/user-attachments/assets/5f1e3f18-1ad4-47ca-885e-cf2341ec2050" />  
