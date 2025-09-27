@@ -1,127 +1,96 @@
-# Em parceria com a Mottu, apresentamos o Mottu Mottion
 
-**Projeto de rastreamento e gestão de motos em pátios da Mottu utilizando IoT, Node-RED e MySQL.**
+# Mottu Mottion – Rastreamento de Motos com IoT, Node-RED e MySQL
 
+**Projeto de rastreamento e gestão de motos em pátios da Mottu utilizando 4 sensores ESP32, Node-RED e MySQL.**
+
+---
 
 ## 1. Descrição
 
-O **Mottu Mottion** surge como uma solução tecnológica para os desafios enfrentados pela **Mottu** na gestão física de seus pátios de motos. Com mais de 100 filiais pelo Brasil, cada unidade possui layouts distintos e fluxos operacionais próprios.
+O **Mottu Mottion** resolve o problema de **falta de rastreabilidade e padronização** nos pátios da Mottu, garantindo:
 
-O problema central detectado é a **falta de rastreabilidade e padronização**, resultando em:
+* Localização rápida de motos;
+* Registro de manutenções e reparos;
+* Redução de riscos de extravios ou movimentações indevidas.
 
-* Dificuldade em localizar motos rapidamente;
-* Falta de registro preciso de manutenções e reparos;
-* Riscos de extravios, furtos ou movimentação indevida de veículos.
+O sistema utiliza:
 
-O Mottu Mottion digitaliza e automatiza o controle de motos com:
-
-* Sensores ESP32 conectados por Wi-Fi;
+* 4 sensores ESP32 simulando motos diferentes;
 * Comunicação via MQTT;
-* Controle de status por LEDs coloridos;
-* Dashboards em Node-RED;
-* Armazenamento direto em MySQL.
-<img width="1914" height="951" alt="image" src="https://github.com/user-attachments/assets/d96ee82f-ad51-4a9e-a626-953874876914" />
+* LEDs para indicar status;
+* Dashboards em Node-RED com gauges estilo “caixinhas” (similar ao Grafana);
+* Armazenamento no MySQL com inserção condicional (apenas quando há mudança de setor).
 
-<img width="1908" height="945" alt="image" src="https://github.com/user-attachments/assets/5f1e3f18-1ad4-47ca-885e-cf2341ec2050" />
+---
 
-<img width="868" height="272" alt="image" src="https://github.com/user-attachments/assets/c589c0cb-a260-4d01-acc8-7a4961bb14fa" />
+## 2. Arquitetura do Sistema
 
-<img width="756" height="84" alt="image" src="https://github.com/user-attachments/assets/5efc9cca-e51d-4123-bc80-064fc7e2003a" />
+O sistema possui **três camadas principais**:
 
-<img width="819" height="111" alt="image" src="https://github.com/user-attachments/assets/a5095387-3421-49d4-9807-0d6350d8c423" />
-
-<img width="708" height="87" alt="image" src="https://github.com/user-attachments/assets/ff186f77-b881-438f-bdbb-bafdc69c08bb" />
-
-<img width="527" height="209" alt="image" src="https://github.com/user-attachments/assets/c73027e4-373d-44af-aa02-ebcc09b2f070" />
-
-<img width="590" height="231" alt="image" src="https://github.com/user-attachments/assets/e72cb13d-a427-42f1-9424-79a941f0d510" />
-
-<img width="1729" height="879" alt="image" src="https://github.com/user-attachments/assets/faf2b499-d48c-42c6-a57d-86b2871b7737" />
-
-<img width="1910" height="954" alt="image" src="https://github.com/user-attachments/assets/076f5b95-de06-4de8-8442-d2608efe1d9d" />
-
-
-## 2. Objetivos
-
-* Automatizar o controle de motos no pátio;
-* Padronizar processos entre todas as filiais;
-* Monitorar setores em tempo real;
-* Armazenar histórico de movimentações para análise;
-* Disponibilizar interface visual intuitiva via dashboards Node-RED.
-
-## 3. Arquitetura do Sistema
-
-### 3.1 Camadas
-
-1. **Hardware/IoT**
-
-   * Sensores ESP32 por setor;
-   * LEDs indicadores de status;
-   * Comunicação via Wi-Fi e MQTT.
-
-2. **Banco de Dados (MySQL)**
-
-   * Registra movimentações, motos, setores, funcionários e clientes;
-   * Tabelas principais: `dados_moto_sensor`, `motos`, `patios`, `usuarios`, `funcionarios`, `vagas`.
-
-3. **Interface Node-RED**
-
-   * Recebe dados via MQTT;
-   * Salva diretamente no MySQL;
-   * Atualiza dashboards em tempo real (gauges, contadores e filtros por setor/status).
-
-
-### 3.2 Comunicação IoT
-
-Cada setor possui Wi-Fi dedicado, e cada sensor ESP32 monitora o setor correspondente, garantindo:
-
-* Operação isolada por setor;
-* Redundância e resiliência;
-* Modularidade e escalabilidade.
-
-**Fluxo do sensor:**
-
-1. Detecta status ou movimentação da moto;
-2. Publica dados JSON no broker MQTT:
-
-```json
-{
-  "id_sensor": "01111",
-  "id_moto": "45124",
-  "setor": "Agendada para manutenção",
-  "timestamp": 123456789
-}
+```
+[ ESP32 / Sensores ]  →  [ MQTT Broker ]  →  [ Node-RED ]  →  [ MySQL ]  →  [ Dashboard ]
 ```
 
-3. Node-RED recebe, verifica mudanças e:
+**Descrição detalhada do fluxo:**
 
-   * Salva diretamente no MySQL;
-   * Atualiza dashboards em tempo real.
+1. **ESP32 / Sensores IoT:**
 
-4. Cada alteração de LED/status é publicada de volta via MQTT.
+   * Cada sensor monitora uma moto e publica dados JSON via MQTT ao detectar movimento ou mudança de setor.
+   * LEDs indicam status do veículo por cor.
 
+2. **MQTT Broker:**
 
-### 3.3 Comunicação MQTT
+   * Recebe e retransmite mensagens para Node-RED e para controle de LEDs.
+   * Permite comunicação bidirecional.
 
-* Broker: `broker.hivemq.com`
-* Tópico de publicação: `iot/mottu-mottion/sensormo`
-* Tópico de assinatura (controle LEDs): `iot/mottu-mottion/statusled`
-* Protocolo: MQTT sobre TCP (porta 1883)
+3. **Node-RED:**
 
-**Benefícios:** comunicação bidirecional, baixo consumo de banda e suporte a múltiplos sensores/dashboards.
+   * Nó `mqtt in` recebe dados;
+   * `Function Insert MySQL` compara setor atual x setor anterior;
 
+     * Se mudou → insere no MySQL;
+     * Se não mudou → não insere, evitando duplicidade;
+   * `Function Contar por Setor` calcula quantas motos estão em cada setor;
+   * `Switch Separar por Setor` envia dados para gauges no Dashboard.
 
-### 3.4 Node-RED + MySQL sem API
+4. **MySQL:**
 
-1. Sensor ESP32 envia dados via MQTT;
-2. Node-RED processa os dados com Function nodes;
-3. Insere ou atualiza registros no MySQL usando MySQL node;
-4. Dashboards atualizados em tempo real.
+   * Tabela principal: `dados_moto_sensor`;
+   * Armazena histórico de movimentações, permitindo consultas e relatórios.
 
-**Vantagens:** menor latência, simplicidade e histórico completo de movimentações.
+5. **Dashboard Node-RED:**
 
+   * Gauges estilo caixinhas/Grafana mostram quantidade de motos por setor;
+   * Atualização em tempo real.
 
-### 3.5 Estrutura de Banco de Dados
+---
+
+## 3. Fluxo de Dados – Diagrama Visual
+
+```mermaid
+flowchart LR
+    A[ESP32 Sensor 1-4] -->|Publica dados JSON| B[MQTT Broker]
+    B --> C[Node-RED: mqtt in]
+    C --> D[Function: Insert MySQL]
+    D --> E[MySQL: dados_moto_sensor]
+    C --> F[Function: Contar por Setor]
+    F --> G[Switch: Separar por Setor]
+    G --> H[Dashboard Node-RED: Gauges/caixinhas]
+    B --> I[Node-RED: Controle LEDs]
+    I --> A
+```
+
+**Explicação do diagrama:**
+
+* **ESP32:** detecta movimentação ou mudança de setor.
+* **MQTT Broker:** distribui a mensagem para Node-RED e permite controle de LEDs.
+* **Node-RED:** processa dados, decide se insere no banco, atualiza contadores por setor e envia para dashboards.
+* **MySQL:** armazena histórico de movimentações apenas se houver alteração real de setor.
+* **Dashboard:** visualização clara e intuitiva em tempo real, estilo Grafana.
+
+---
+
+## 4. Banco de Dados
 
 **Tabela principal `dados_moto_sensor`:**
 
@@ -137,16 +106,11 @@ CREATE TABLE dados_moto_sensor (
 );
 ```
 
-Outras tabelas: `motos`, `patios`, `funcionarios`, `vagas`.
+**Obs:** A inserção condicional evita múltiplos registros iguais e mantém histórico limpo.
 
-## 4. Implementação do Firmware ESP32
+---
 
-* Desenvolvido em **Arduino C++** integrando Wi-Fi, MQTT e LEDs;
-* Publica status em intervalos configuráveis (ex.: 5 segundos);
-* Recebe comandos de alteração de LEDs/setores via MQTT;
-* Código modular para inclusão de novos sensores/setores.
-
-**LEDs configuráveis por setor:**
+## 5. LEDs de Status
 
 | Cor LED      | Setor Correspondente     |
 | ------------ | ------------------------ |
@@ -159,47 +123,22 @@ Outras tabelas: `motos`, `patios`, `funcionarios`, `vagas`.
 | Roxo         | Sem Placa                |
 | Bordô        | Motor com defeito        |
 
-**Fluxo do ESP32:**
+---
 
-1. Conecta ao Wi-Fi e MQTT;
-2. Publica status inicial;
-3. Aguarda comandos de alteração;
-4. Atualiza status e republica periodicamente.
+## 6. Dashboard Node-RED
 
-## 5. Interface Node-RED
+* Gauges estilo caixinhas/Grafana;
+* Contagem de motos por setor em tempo real;
+* Filtro por status e setor;
+* Atualização automática via MQTT;
+* Evita sobrecarga de dados ao registrar somente mudanças de setor.
 
-* Dashboard responsivo com gauges para cada setor;
-* Filtragem por setor, status e data;
-* Atualização em tempo real via MQTT;
-* Envio de comandos para alteração de LEDs.
+---
 
-> Não é necessário utilizar API intermediária para registro de movimentações.
+## 7. Ferramentas
 
-
-## 6. Backend Java + Spring Boot (Opcional)
-
-* Gerencia motos, setores, funcionários e clientes;
-* Persistência via Spring Data JPA;
-* Endpoints principais:
-
-  * `GET /motos` – Lista motos
-  * `POST /motos` – Cadastra nova moto
-  * `POST /movimentacao` – Registra movimentação
-  * `GET /dashboards/setores` – Contagem de motos por setor
-
-## 7. Diferenciais
-
-* Modularidade e escalabilidade;
-* Atualizações em tempo real via MQTT;
-* Padronização entre filiais;
-* Rastreabilidade completa da frota;
-* Integração total: IoT + Node-RED + MySQL.
-
-
-## 8. Ferramentas Utilizadas
-
-* **Hardware:** ESP32, LEDs, sensores simulados via Wokwi
-* **Software:** Node-RED, Arduino IDE, Java + Spring Boot, MySQL, MQTT Broker HiveMQ
+* **Hardware:** ESP32, LEDs, sensores Wokwi;
+* **Software:** Node-RED, Arduino IDE, Java + Spring Boot, MySQL, MQTT HiveMQ;
 * **Simuladores Wokwi:**
 
   * Sensor 1: [Link](https://wokwi.com/projects/442719596591605761)
@@ -207,21 +146,39 @@ Outras tabelas: `motos`, `patios`, `funcionarios`, `vagas`.
   * Sensor 3: [Link](https://wokwi.com/projects/442741385511878657)
   * Sensor 4: [Link](https://wokwi.com/projects/442741436895251457)
 
+---
+
+## 8. Diferenciais
+
+* Uso de **4 sensores ESP32** simulando motos distintas;
+* **Inserção condicional**: evita duplicidade de dados;
+* **Gauges estilo Grafana** para visualização intuitiva;
+* Atualizações em tempo real via MQTT;
+* Modularidade e escalabilidade para múltiplas filiais;
+* Histórico completo de movimentações.
+
+---
+
 ## 9. Conclusão
 
-O **Mottu Mottion** oferece:
+O **Mottu Mottion** permite:
 
-* Gestão eficiente e automatizada da frota;
-* Rastreabilidade e segurança em tempo real;
-* Dashboards intuitivos e atualizações automáticas;
-* Histórico de movimentações para análise e otimização de processos.
+* Monitoramento de motos em tempo real;
+* Rastreabilidade e segurança;
+* Dashboard intuitivo estilo Grafana;
+* Evita duplicidade de dados, mantendo histórico limpo;
+* Escalabilidade e modularidade para toda a frota.
+
+---
 
 ## 10. Roadmap Futuro
 
-* Integração com aplicação mobile para clientes e funcionários;
-* Dashboard em tempo real com Node-RED e Grafana;
-* Relatórios em PDF e Excel;
-* Expansão para monitoramento via IoT em escala.
+* Integração com app mobile para clientes e funcionários;
+* Dashboards em Node-RED + Grafana com relatórios automáticos;
+* Exportação de relatórios em PDF/Excel;
+* Expansão para IoT em escala nacional.
+
+---
 
 ## 11. Authors
 
@@ -231,3 +188,6 @@ O **Mottu Mottion** oferece:
 
 ---
 
+Se você quiser, posso criar **uma versão ainda mais visual com imagens do Node-RED real, setas mostrando o fluxo MQTT e gauges animadas**, como se fosse um manual passo a passo do sistema.
+
+Quer que eu faça essa versão completa visual também?
