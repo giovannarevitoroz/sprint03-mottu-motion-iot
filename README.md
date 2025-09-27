@@ -20,6 +20,26 @@ O Mottu Mottion digitaliza e automatiza o controle de motos com:
 * Controle de status por LEDs coloridos;
 * Dashboards em Node-RED;
 * Armazenamento direto em MySQL.
+<img width="1914" height="951" alt="image" src="https://github.com/user-attachments/assets/d96ee82f-ad51-4a9e-a626-953874876914" />
+
+<img width="1908" height="945" alt="image" src="https://github.com/user-attachments/assets/5f1e3f18-1ad4-47ca-885e-cf2341ec2050" />
+
+<img width="868" height="272" alt="image" src="https://github.com/user-attachments/assets/c589c0cb-a260-4d01-acc8-7a4961bb14fa" />
+
+<img width="756" height="84" alt="image" src="https://github.com/user-attachments/assets/5efc9cca-e51d-4123-bc80-064fc7e2003a" />
+
+<img width="819" height="111" alt="image" src="https://github.com/user-attachments/assets/a5095387-3421-49d4-9807-0d6350d8c423" />
+
+<img width="708" height="87" alt="image" src="https://github.com/user-attachments/assets/ff186f77-b881-438f-bdbb-bafdc69c08bb" />
+
+<img width="527" height="209" alt="image" src="https://github.com/user-attachments/assets/c73027e4-373d-44af-aa02-ebcc09b2f070" />
+
+<img width="590" height="231" alt="image" src="https://github.com/user-attachments/assets/e72cb13d-a427-42f1-9424-79a941f0d510" />
+
+<img width="1729" height="879" alt="image" src="https://github.com/user-attachments/assets/faf2b499-d48c-42c6-a57d-86b2871b7737" />
+
+<img width="1910" height="954" alt="image" src="https://github.com/user-attachments/assets/076f5b95-de06-4de8-8442-d2608efe1d9d" />
+
 
 ## 2. Objetivos
 
