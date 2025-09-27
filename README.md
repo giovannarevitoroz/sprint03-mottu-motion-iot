@@ -2,6 +2,8 @@
 
 **Projeto de rastreamento e gestão de motos em pátios da Mottu utilizando IoT, Node-RED e MySQL.**
 
+**[VÍDEO](https://youtu.be/0FdZ16pqEuo)**
+
 ---
 
 ## 1. Descrição
