@@ -112,12 +112,21 @@ flowchart LR
 
 ```mermaid
 graph TD
-    A[ESP32 Sensor] -->|MQTT| B[Node-RED Dashboard]
+    A[ESP32 Sensor] -->|MQTT| B[Node-RED]
     B --> C[MySQL Database]
     B -->|Comando LED| A
-    D[Backend Java Spring Boot] --> C
-    D --> B
 ```
+
+> **⚠️ Importante: Este projeto NÃO utiliza API (REST) entre o Node-RED e o banco de dados.**
+
+O uso de uma API foi **dispensado propositalmente** devido à eficiência do fluxo direto entre os componentes. Veja os motivos abaixo:
+
+* **Baixa latência**: O **Node-RED se conecta diretamente** ao broker MQTT e ao banco de dados **MySQL**, eliminando camadas intermediárias.
+* **Simplicidade arquitetural**: Menos componentes envolvidos significa **menos pontos de falha** e manutenção mais simples.
+* **Gravação direta no banco**: O Node-RED **grava os dados diretamente no MySQL**, mas **somente após verificar** se houve **mudança real no setor da moto**, evitando registros duplicados.
+* **Atualização em tempo real**: Os **dashboards são atualizados instantaneamente**, aproveitando a arquitetura de **publicação/assinatura do MQTT**.
+* **Fluxos visuais e eficientes**: Toda a lógica (como validações e contagens) é feita com **Function nodes no Node-RED**, **sem necessidade de backend externo** como Java, Spring Boot ou Node.js.
+
 
 1. **Hardware/IoT**
 
