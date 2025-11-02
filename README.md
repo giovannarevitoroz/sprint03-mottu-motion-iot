@@ -291,7 +291,7 @@ erDiagram
         TEXT observacao "Informações adicionais"
         VARCHAR estado "Status atual (ex: ATIVA, PARADA, RECUPERACAO)"
         BIGINT timestamp_millis "Registro em milissegundos (epoch)"
-        TIMESTAMP data_hora_registro "Data e hora do registro (default: now)"
+        TIMESTAMP data_hora_registro "Data e hora do registro (default NOW)"
     }
 ```
 
@@ -303,16 +303,16 @@ erDiagram
 
 ```mermaid
 graph TD
-    A[id_sensor: SENS001] --> B[id_moto: MOTO45124]
-    B --> C[setor: Recuperação]
-    C --> D[estado: Parada]
-    D --> E[timestamp_millis: 1730558752]
-    E --> F[data_hora_registro: NOW]
+    A["id_sensor: SENS001"] --> B["id_moto: MOTO45124"]
+    B --> C["setor: Recuperacao"]
+    C --> D["estado: Parada"]
+    D --> E["timestamp_millis: 1730558752"]
+    E --> F["data_hora_registro: NOW"]
 ```
 
 ---
 
-## Fluxo de Atualização do Dashboard
+### Fluxo de Atualização do Dashboard
 
 ```mermaid
 sequenceDiagram
@@ -323,44 +323,43 @@ sequenceDiagram
     participant D as Dashboard
     participant U as Usuário
 
-    S ->> B: Publica status JSON
-    B ->> N: Encaminha mensagem
-    N ->> M: Insere registro no banco
-    N ->> D: Atualiza dados em tempo real
-    D ->> U: Exibe status das motos
+    S->>B: Publica status JSON
+    B->>N: Encaminha mensagem
+    N->>M: Insere registro no banco
+    N->>D: Atualiza dados em tempo real
+    D->>U: Exibe status das motos
 ```
 
 ---
 
-## Arquitetura IoT Completa
+### Arquitetura IoT Completa
 
 ```mermaid
 graph LR
     subgraph "Camada Física"
-        S1[Sensor IoT - HC-06]:::hardware
-        S2[Arduino Uno]:::hardware
+        S1["Sensor IoT - HC-06"]
+        S2["Arduino Uno"]
     end
 
     subgraph "Comunicação"
-        BT[Bluetooth / Serial]:::network
-        MQTT[Broker MQTT (HiveMQ)]:::network
+        BT["Bluetooth / Serial"]
+        MQTT["Broker MQTT (HiveMQ)"]
     end
 
     subgraph "Processamento"
-        NR[Node-RED]:::logic
-        FN[Funções Node.js / JavaScript]:::logic
+        NR["Node-RED"]
+        FN["Funções Node.js / JavaScript"]
     end
 
     subgraph "Persistência"
-        DB[(MySQL - sensor_table)]:::storage
+        DB["MySQL - sensor_table"]
     end
 
     subgraph "Visualização"
-        DASH[Dashboard Node-RED]:::ui
-        USR[Usuário Final]:::ui
+        DASH["Dashboard Node-RED"]
+        USR["Usuário Final"]
     end
 
-    %% Conexões
     S1 -->|Envia dados via Bluetooth| S2
     S2 -->|Publica status JSON| MQTT
     MQTT -->|Entrega mensagens| NR
@@ -368,12 +367,6 @@ graph LR
     FN -->|Insere dados| DB
     NR -->|Atualiza em tempo real| DASH
     DASH -->|Mostra status e alertas| USR
-
-    classDef hardware fill:#d6eaff,stroke:#007acc,stroke-width:1px;
-    classDef network fill:#fff4d6,stroke:#e0a100,stroke-width:1px;
-    classDef logic fill:#e7ffd9,stroke:#37a000,stroke-width:1px;
-    classDef storage fill:#ffe0e0,stroke:#cc0000,stroke-width:1px;
-    classDef ui fill:#f0f0f0,stroke:#333,stroke-width:1px;
 ```
 
 ---
