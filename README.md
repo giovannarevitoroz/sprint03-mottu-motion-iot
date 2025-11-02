@@ -332,44 +332,37 @@ sequenceDiagram
 
 ---
 
-### Arquitetura IoT Completa
-
+## **Arquitetura IoT Completa (Teórica)**
 ```mermaid
 graph LR
-    subgraph "Camada Física"
-        S1["Sensor IoT - HC-06"]
-        S2["Arduino Uno"]
-    end
+    S1["Sensor IoT - HC-06"] --> S2["Arduino Uno"]
+    S2 --> BT["Bluetooth / Serial"]
+    BT --> MQTT["Broker MQTT"]
+    MQTT --> NR["Node-RED"]
+    NR --> FN["Funções JavaScript"]
+    FN --> DB["MySQL"]
+    NR --> DASH["Dashboard"]
+```
 
-    subgraph "Comunicação"
-        BT["Bluetooth / Serial"]
-        MQTT["Broker MQTT (HiveMQ)"]
-    end
-
-    subgraph "Processamento"
-        NR["Node-RED"]
-        FN["Funções Node.js / JavaScript"]
-    end
-
-    subgraph "Persistência"
-        DB["MySQL - sensor_table"]
-    end
-
-    subgraph "Visualização"
-        DASH["Dashboard Node-RED"]
-        USR["Usuário Final"]
-    end
-
-    S1 -->|Envia dados via Bluetooth| S2
-    S2 -->|Publica status JSON| MQTT
-    MQTT -->|Entrega mensagens| NR
-    NR -->|Processa e formata| FN
-    FN -->|Insere dados| DB
-    NR -->|Atualiza em tempo real| DASH
-    DASH -->|Mostra status e alertas| USR
+## **Arquitetura Real Implementada (Prática)**
+```mermaid
+graph TD
+    S1[ESP32 Sensor 1] --> MQTT
+    S2[ESP32 Sensor 2] --> MQTT
+    S3[ESP32 Sensor 3] --> MQTT
+    S4[ESP32 Sensor 4] --> MQTT
+    
+    MQTT --> NR[Node-RED]
+    NR --> DB[MySQL]
+    NR --> PROC[Processamento]
+    
+    PROC --> DASH[Dashboard]
+    PROC --> NOTIF[Alertas]
+    PROC --> GAUGES[Gauges]
 ```
 
 ---
+
 
 ## Benefícios do Fluxo
 
