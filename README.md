@@ -41,15 +41,44 @@ Em resumo, o Mottu Mottion fornece às equipes de gestão e operação logístic
 
 ## Funcionalidades
 
-* Rastreamento em tempo real de motos por setor
-* Dashboards Node-RED com gauges e contadores
-* Filtragem por setor, status e data
-* Atualização de LEDs via MQTT
-* Armazenamento histórico no MySQL
-* Modularidade e escalabilidade por filial
-* Interface web responsiva
+Alertas Inteligentes: Notificações em UI Toast sobre motos em setores críticos (Danos Estruturais, Manutenção) e detecção de anomalias (Múltiplas Motos / Mesmo Sensor).
+
+Interface Web Profissional: Dashboard (customizado via ui_template) com CSS moderno, cards de status e tabela de localização geral.
+
+Gauges de Capacidade: Indicadores visuais para monitorar o volume de motos em cada setor (ex: "Agendada para manutenção"), permitindo uma gestão visual de gargalos.
+
+Controle de LEDs (Feedback Físico): Capacidade de receber comandos para acender LEDs no pátio, indicando o status do setor, melhorando a comunicação visual para os funcionários.
 
 ---
+
+## Instalação e Execução (Node-RED)
+
+Os comandos genéricos de `npm` sugerem que o Node-RED está sendo executado localmente. Para um ambiente Node-RED, as etapas são mais específicas:
+
+### Pré-requisitos
+
+1.  Node.js e Node-RED instalados (local ou em Docker).
+2.  Servidor MySQL em execução.
+3.  Nós do Node-RED instalados: `node-red-contrib-mysql` e `node-red-dashboard`.
+
+### Setup do Banco de Dados
+
+Execute o script SQL para criar o banco de dados e a tabela `dados_moto_sensor`:
+
+```sql
+CREATE DATABASE IF NOT EXISTS sensor_table;
+USE sensor_table;
+-- ... (restante do CREATE TABLE)
+```
+
+### Importação do Fluxo
+
+1.  Abra a interface do Node-RED.
+2.  Clique no menu (hambúrguer) \> **Importar**.
+3.  Cole o conteúdo do arquivo **`flow.json`** no campo de texto e clique em Importar.
+4.  Configure o nó **`MySQL DB`** (`id: 1857ae14076cf7e9`) com as credenciais corretas do seu servidor MySQL (Host, Porta, Usuário, Senha e o nome do DB: `sensor_table`).
+5.  Clique em **Deploy** no canto superior direito para iniciar o fluxo.
+
 
 ## Arquitetura do Sistema
 
