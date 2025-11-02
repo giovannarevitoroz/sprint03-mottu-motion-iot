@@ -169,22 +169,21 @@ graph LR
 ```
 
 ## **Arquitetura Real Implementada (Prática)**
-```mermaid
 graph TD
-    S1[ESP32 Sensor 1] --> MQTT
-    S2[ESP32 Sensor 2] --> MQTT
-    S3[ESP32 Sensor 3] --> MQTT
-    S4[ESP32 Sensor 4] --> MQTT
+    A[ESP32 Sensor 1] --> M[MQTT Broker];
+    B[ESP32 Sensor 2] --> M;
+    C[ESP32 Sensor 3] --> M;
+    D[ESP32 Sensor 4] --> M;
     
-    MQTT --> NR[Node-RED]
-    NR --> DB[MySQL]
-    NR --> PROC[Processamento]
+    M --> NR[Node-RED];
+    NR --> DB[(MySQL Database)];
+    NR --> PROC[Processamento];
     
-    PROC --> DASH[Dashboard]
-    PROC --> NOTIF[Alertas]
-    PROC --> GAUGES[Gauges]
-```
-
+    PROC --> DASH[Dashboard UI];
+    PROC --> NOTIF[Sistema de Alertas];
+    PROC --> GAUGE[Gauges];
+    
+    DASH --> USER[Usuário Final];
 ---
 
 * Recebe comandos de alteração de LEDs via MQTT.
