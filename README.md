@@ -159,7 +159,7 @@ sequenceDiagram
 ## **Arquitetura IoT Completa (Teórica)**
 ```mermaid
 graph LR
-    S1["Sensor IoT - HC-06"] --> S2["Arduino Uno"]
+    S1["Sensor ESP32"] --> S2["Arduino Uno"]
     S2 --> BT["Bluetooth / Serial"]
     BT --> MQTT["Broker MQTT"]
     MQTT --> NR["Node-RED"]
