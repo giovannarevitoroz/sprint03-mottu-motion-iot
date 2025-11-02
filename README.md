@@ -159,21 +159,10 @@ return [messages];
 
 ### 3. MySQL
 
-* Tabelas: `dados_moto_sensor`, `motos`, `patios`, `usuarios`, `funcionarios`, `vagas`.
 * Armazena histórico completo e evita duplicidade de registros.
 * Permite análises futuras de movimentação e performance de setores.
 
 ---
-
-### 4. API, App Mobile e DevOps
-
-| Integração      | Como Funciona                          | Próximos Passos                                        |
-| --------------- | -------------------------------------- | ------------------------------------------------------ |
-| API de Ingestão | Recebe dados via MQTT/HTTP Input       | Criar endpoints REST ou WebSocket para apps externos   |
-| API de Consulta | Node-RED mantém estado com `flow.set`  | Expor estado como JSON para app mobile                 |
-| Dashboard Web   | UI Template consome dados do Node-RED  | Manter atualizações em tempo real via MQTT             |
-| App Mobile      | Consome estado consolidado em JSON     | Desenvolver front-end em React Native/Flutter          |
-| DevOps          | Node-RED versionado, deploy via Docker | CI/CD, monitoramento centralizado, logs em Grafana/ELK |
 
 ---
 
@@ -203,15 +192,6 @@ npm run deploy
 
 ---
 
-## Roadmap Futuro
-
-* Integração com aplicação mobile para clientes e funcionários
-* Dashboard em Grafana para comparações históricas
-* Relatórios em PDF e Excel
-* Monitoramento IoT em escala nacional
-
----
-
 ## Autores
 
 * Giovanna Revito Roz – RM558981
@@ -227,7 +207,3 @@ npm run deploy
 * [How to write a Good README](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
 
 ---
-
-Se você quiser, posso criar **uma versão visual em Markdown ainda mais elegante**, com badges de Node-RED, MQTT e MySQL interativos, GIFs dos dashboards e links simulando a execução do ESP32.
-
-Quer que eu faça isso?
