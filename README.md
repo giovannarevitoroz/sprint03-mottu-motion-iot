@@ -169,6 +169,7 @@ graph LR
 ```
 
 ## **Arquitetura Real Implementada (Prática)**
+```mermaid
 graph TD
     A[ESP32 Sensor 1] --> M[MQTT Broker];
     B[ESP32 Sensor 2] --> M;
@@ -184,7 +185,7 @@ graph TD
     PROC --> GAUGE[Gauges];
     
     DASH --> USER[Usuário Final];
----
+```
 
 * Recebe comandos de alteração de LEDs via MQTT.
 * LEDs coloridos indicam status de cada moto por setor.
