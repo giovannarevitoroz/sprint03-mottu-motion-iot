@@ -299,77 +299,94 @@ erDiagram
 
 ---
 
-## Fluxo Node-RED (Explicação por Blocos)
-
-| Bloco                   | Função                                              | Saída / Destino                                         |
-| ----------------------- | --------------------------------------------------- | ------------------------------------------------------- |
-| **Entrada MQTT**        | Recebe dados do tópico `iot/mottu-mottion/status`   | Envia para Debug, MySQL e Funções                       |
-| **Debug MQTT**          | Mostra no console para verificação                  | —                                                       |
-| **Insert MySQL**        | Formata e insere dados no banco `dados_moto_sensor` | → MySQL DB                                              |
-| **MySQL DB**            | Conexão com o banco de dados                        | → Dashboard e Dado Moto                                 |
-| **Dado Moto**           | Centraliza informações das motos                    | → Dashboard + Notificação Setor                         |
-| **Notificação Setor**   | Envia alertas conforme o setor                      | —                                                       |
-| **Contar por Setor**    | Faz contagem total de motos por setor               | → Separar por Setor                                     |
-| **Separar por Setor**   | Direciona os dados conforme o setor                 | → Quatro saídas (manutenção, danos, reparos, sem placa) |
-| **Dashboard - Motos**   | Exibe visualmente o status das motos                | —                                                       |
-| **Atualizar a cada 5s** | Atualiza o dashboard periodicamente                 | —                                                       |
-
----
-
-## Diagramas Propostos
-
-### **Fluxo Geral (Flow Chart)**
-
-```
-[Sensor IoT]
-     ↓
-[Broker MQTT (HiveMQ)]
-     ↓
-[Entrada MQTT Node-RED]
- ├──► [Debug MQTT]
- ├──► [Insert MySQL] ─► [MySQL DB] ─► [Dashboard - Motos]
- ├──► [Dado Moto] ─► [Notificação Setor]
- └──► [Contar por Setor] ─► [Separar por Setor]
-                                 ├──► Agendada p/ Manutenção
-                                 ├──► Danos Estruturais
-                                 ├──► Reparo Simples
-                                 └──► Sem Placa
-```
-
-### **Graph Chart – Dados no Banco**
+### Exemplo de Registro (Graph Chart)
 
 ```mermaid
 graph TD
-A[id_sensor:01111] --> B[id_moto:45124]
-B --> C[setor: Agendada para manutenção]
-C --> D[estado: Parada]
-D --> E[timestamp_millis: 37525]
-E --> F[data_hora_registro: NOW()]
+    A[id_sensor: SENS001] --> B[id_moto: MOTO45124]
+    B --> C[setor: Recuperação]
+    C --> D[estado: Parada]
+    D --> E[timestamp_millis: 1730558752]
+    E --> F[data_hora_registro: NOW()]
 ```
 
 ---
 
-### **Fluxo de Atualização do Dashboard**
+## Fluxo de Atualização do Dashboard
 
 ```mermaid
 sequenceDiagram
-Sensor ->> MQTT Broker: Publish status JSON
-MQTT Broker ->> Node-RED: Forward message
-Node-RED ->> MySQL: Insert record
-Node-RED ->> Dashboard: Update status in real time
-Dashboard ->> User: Display moto info
+    participant S as Sensor
+    participant B as MQTT Broker
+    participant N as Node-RED
+    participant M as MySQL
+    participant D as Dashboard
+    participant U as Usuário
+
+    S ->> B: Publica status JSON
+    B ->> N: Encaminha mensagem
+    N ->> M: Insere registro no banco
+    N ->> D: Atualiza dados em tempo real
+    D ->> U: Exibe status das motos
+```
+
+---
+
+## Arquitetura IoT Completa
+
+```mermaid
+graph LR
+    subgraph "Camada Física"
+        S1[Sensor IoT - HC-06]:::hardware
+        S2[Arduino Uno]:::hardware
+    end
+
+    subgraph "Comunicação"
+        BT[Bluetooth / Serial]:::network
+        MQTT[Broker MQTT (HiveMQ)]:::network
+    end
+
+    subgraph "Processamento"
+        NR[Node-RED]:::logic
+        FN[Funções Node.js / JavaScript]:::logic
+    end
+
+    subgraph "Persistência"
+        DB[(MySQL - sensor_table)]:::storage
+    end
+
+    subgraph "Visualização"
+        DASH[Dashboard Node-RED]:::ui
+        USR[Usuário Final]:::ui
+    end
+
+    %% Conexões
+    S1 -->|Envia dados via Bluetooth| S2
+    S2 -->|Publica status JSON| MQTT
+    MQTT -->|Entrega mensagens| NR
+    NR -->|Processa e formata| FN
+    FN -->|Insere dados| DB
+    NR -->|Atualiza em tempo real| DASH
+    DASH -->|Mostra status e alertas| USR
+
+    classDef hardware fill:#d6eaff,stroke:#007acc,stroke-width:1px;
+    classDef network fill:#fff4d6,stroke:#e0a100,stroke-width:1px;
+    classDef logic fill:#e7ffd9,stroke:#37a000,stroke-width:1px;
+    classDef storage fill:#ffe0e0,stroke:#cc0000,stroke-width:1px;
+    classDef ui fill:#f0f0f0,stroke:#333,stroke-width:1px;
 ```
 
 ---
 
 ## Benefícios do Fluxo
 
-* Comunicação **em tempo real** com as motos.
-* Registro completo em **banco de dados SQL**.
-* **Visualização interativa** no Dashboard Node-RED.
-* **Automação de alertas** e separação lógica por setor.
-* Base sólida para **analytics e relatórios de manutenção**.
+* Comunicação em tempo real com os sensores das motos
+* Registro completo em banco de dados SQL
+* Dashboard interativo no Node-RED
+* Alertas automáticos por setor
+* Base sólida para analytics e relatórios de manutenção
 
+---
 
 ## Autores
 
@@ -383,6 +400,6 @@ Dashboard ->> User: Display moto info
 
 * [Awesome README Templates](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
 * [Awesome README](https://github.com/matiassingers/awesome-readme)
-* [How to write a Good README](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
+* [How to Write a Good README](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
 
 ---
