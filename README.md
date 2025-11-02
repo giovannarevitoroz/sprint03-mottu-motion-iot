@@ -281,6 +281,20 @@ O sistema faz a integração entre dispositivos IoT (sensores Bluetooth nas moto
 
 ## Estrutura do Banco de Dados
 
+```mermaid
+erDiagram
+    DADOS_MOTO_SENSOR {
+        INT id PK "Chave primária (auto incremento)"
+        VARCHAR id_sensor "Identificador do sensor (ex: SENS001)"
+        VARCHAR id_moto "Identificador da moto"
+        VARCHAR setor "Setor/Zona da moto"
+        TEXT observacao "Informações adicionais"
+        VARCHAR estado "Status atual (ex: ATIVA, PARADA, RECUPERACAO)"
+        BIGINT timestamp_millis "Registro em milissegundos (epoch)"
+        TIMESTAMP data_hora_registro "Data e hora do registro (default: now)"
+    }
+```
+
 ```sql
 CREATE DATABASE IF NOT EXISTS sensor_table;
 USE sensor_table;
@@ -297,7 +311,7 @@ CREATE TABLE dados_moto_sensor (
     timestamp_millis BIGINT,
     data_hora_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-```
+
 
 **Função**: armazenar todos os registros publicados pelos sensores das motos, permitindo auditoria, relatórios e acompanhamento histórico.
 
