@@ -73,6 +73,91 @@ Em resumo, o Mottu Mottion fornece às equipes de gestão e operação logístic
 
 Esses dados são decodificados e enviados para os próximos nós do fluxo.
 
+
+## Estrutura do Banco de Dados
+
+```mermaid
+erDiagram
+    DADOS_MOTO_SENSOR {
+        INT id PK "Chave primária (auto incremento)"
+        VARCHAR id_sensor "Identificador do sensor (ex: SENS001)"
+        VARCHAR id_moto "Identificador da moto"
+        VARCHAR setor "Setor/Zona da moto"
+        TEXT observacao "Informações adicionais"
+        VARCHAR estado "Status atual (ex: ATIVA, PARADA, RECUPERACAO)"
+        BIGINT timestamp_millis "Registro em milissegundos (epoch)"
+        TIMESTAMP data_hora_registro "Data e hora do registro (default NOW)"
+    }
+```
+
+**Função**: armazenar todos os registros publicados pelos sensores das motos, permitindo auditoria, relatórios e acompanhamento histórico.
+
+---
+
+### Exemplo de Registro (Graph Chart)
+
+```mermaid
+graph TD
+    A["id_sensor: 02122"] --> B["id_moto: 55233"]
+    B --> C["setor: Danos Estruturais"]
+    C --> D["estado: Parada"]
+    D --> E["timestamp_millis: 45247"]
+    E --> F["data_hora_registro: NOW"]
+```
+
+---
+
+### Fluxo de Atualização do Dashboard
+
+```mermaid
+sequenceDiagram
+    participant S as Sensor
+    participant B as MQTT Broker
+    participant N as Node-RED
+    participant M as MySQL
+    participant D as Dashboard
+    participant U as Usuário
+
+    S->>B: Publica status JSON
+    B->>N: Encaminha mensagem
+    N->>M: Insere registro no banco
+    N->>D: Atualiza dados em tempo real
+    D->>U: Exibe status das motos
+```
+
+---
+
+## **Arquitetura IoT Completa (Teórica)**
+```mermaid
+graph LR
+    S1["Sensor IoT - HC-06"] --> S2["Arduino Uno"]
+    S2 --> BT["Bluetooth / Serial"]
+    BT --> MQTT["Broker MQTT"]
+    MQTT --> NR["Node-RED"]
+    NR --> FN["Funções JavaScript"]
+    FN --> DB["MySQL"]
+    NR --> DASH["Dashboard"]
+```
+
+## **Arquitetura Real Implementada (Prática)**
+```mermaid
+graph TD
+    S1[ESP32 Sensor 1] --> MQTT
+    S2[ESP32 Sensor 2] --> MQTT
+    S3[ESP32 Sensor 3] --> MQTT
+    S4[ESP32 Sensor 4] --> MQTT
+    
+    MQTT --> NR[Node-RED]
+    NR --> DB[MySQL]
+    NR --> PROC[Processamento]
+    
+    PROC --> DASH[Dashboard]
+    PROC --> NOTIF[Alertas]
+    PROC --> GAUGES[Gauges]
+```
+
+---
+
 * Recebe comandos de alteração de LEDs via MQTT.
 * LEDs coloridos indicam status de cada moto por setor.
 
@@ -264,105 +349,6 @@ O projeto **Mottu Mottion** não foi apenas uma solução técnica de IoT, Node-
 * Persistência de histórico de eventos críticos.
 
 ---
-
-
-## Visão Geral do Fluxo
-
-O sistema faz a integração entre dispositivos IoT (sensores Bluetooth nas motos Mottu) e uma base de dados central via MQTT + MySQL, exibindo os dados em dashboards e notificando conforme o setor.
-
-### Fluxo resumido:
-
-1. **Entrada MQTT** recebe mensagens do tópico `iot/mottu-mottion/status`.
-2. **Inserção MySQL** salva os dados no banco `sensor_table`.
-3. **Dashboard e Notificações** são atualizados em tempo real.
-4. **Contagem e separação por setor** organizam os dados para relatórios e ações automáticas.
-
----
-
-## Estrutura do Banco de Dados
-
-```mermaid
-erDiagram
-    DADOS_MOTO_SENSOR {
-        INT id PK "Chave primária (auto incremento)"
-        VARCHAR id_sensor "Identificador do sensor (ex: SENS001)"
-        VARCHAR id_moto "Identificador da moto"
-        VARCHAR setor "Setor/Zona da moto"
-        TEXT observacao "Informações adicionais"
-        VARCHAR estado "Status atual (ex: ATIVA, PARADA, RECUPERACAO)"
-        BIGINT timestamp_millis "Registro em milissegundos (epoch)"
-        TIMESTAMP data_hora_registro "Data e hora do registro (default NOW)"
-    }
-```
-
-**Função**: armazenar todos os registros publicados pelos sensores das motos, permitindo auditoria, relatórios e acompanhamento histórico.
-
----
-
-### Exemplo de Registro (Graph Chart)
-
-```mermaid
-graph TD
-    A["id_sensor: 02122"] --> B["id_moto: 55233"]
-    B --> C["setor: Danos Estruturais"]
-    C --> D["estado: Parada"]
-    D --> E["timestamp_millis: 45247"]
-    E --> F["data_hora_registro: NOW"]
-```
-
----
-
-### Fluxo de Atualização do Dashboard
-
-```mermaid
-sequenceDiagram
-    participant S as Sensor
-    participant B as MQTT Broker
-    participant N as Node-RED
-    participant M as MySQL
-    participant D as Dashboard
-    participant U as Usuário
-
-    S->>B: Publica status JSON
-    B->>N: Encaminha mensagem
-    N->>M: Insere registro no banco
-    N->>D: Atualiza dados em tempo real
-    D->>U: Exibe status das motos
-```
-
----
-
-## **Arquitetura IoT Completa (Teórica)**
-```mermaid
-graph LR
-    S1["Sensor IoT - HC-06"] --> S2["Arduino Uno"]
-    S2 --> BT["Bluetooth / Serial"]
-    BT --> MQTT["Broker MQTT"]
-    MQTT --> NR["Node-RED"]
-    NR --> FN["Funções JavaScript"]
-    FN --> DB["MySQL"]
-    NR --> DASH["Dashboard"]
-```
-
-## **Arquitetura Real Implementada (Prática)**
-```mermaid
-graph TD
-    S1[ESP32 Sensor 1] --> MQTT
-    S2[ESP32 Sensor 2] --> MQTT
-    S3[ESP32 Sensor 3] --> MQTT
-    S4[ESP32 Sensor 4] --> MQTT
-    
-    MQTT --> NR[Node-RED]
-    NR --> DB[MySQL]
-    NR --> PROC[Processamento]
-    
-    PROC --> DASH[Dashboard]
-    PROC --> NOTIF[Alertas]
-    PROC --> GAUGES[Gauges]
-```
-
----
-
 
 ## Benefícios do Fluxo
 
