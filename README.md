@@ -1,6 +1,6 @@
 # Mottu Mottion – Rastreamento de Motos com IoT, Node-RED e MySQL
 
-![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
+![Logo](https://chatgpt.com/s/m_6907ae3bd9e08191aec136d7df8afdc3)
 
 O Mottu Mottion é um sistema de rastreamento e gestão de motos desenvolvido para otimizar a operação da empresa de aluguel de motos Mottu. O projeto integra IoT, Node-RED e MySQL, oferecendo uma solução completa para monitoramento e controle da frota em tempo real nos pátios da Mottu.
 
@@ -86,11 +86,6 @@ Esses dados são decodificados e enviados para os próximos nós do fluxo.
 | Cinza        | Agendada para manutenção |
 | Roxo         | Sem Placa                |
 | Bordô        | Motor com defeito        |
-
----
-
-Perfeito ✅
-Aqui vai uma **versão resumida e direta**, ideal para colocar no seu README (mantendo o mesmo estilo e linguagem técnica):
 
 ---
 
@@ -270,22 +265,6 @@ O projeto **Mottu Mottion** não foi apenas uma solução técnica de IoT, Node-
 
 ---
 
-## Autores
-
-* Giovanna Revito Roz – RM558981
-* Kaian Gustavo de Oliveira Nascimento – RM558986
-* Lucas Kenji Kikuchi – RM554424
-
----
-
-## Referências
-
-* [Awesome README Templates](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
-* [Awesome README](https://github.com/matiassingers/awesome-readme)
-* [How to write a Good README](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
-
----
-
 
 ## Visão Geral do Fluxo
 
@@ -397,3 +376,19 @@ Dashboard ->> User: Display moto info
 * **Automação de alertas** e separação lógica por setor.
 * Base sólida para **analytics e relatórios de manutenção**.
 
+
+## Autores
+
+* Giovanna Revito Roz – RM558981
+* Kaian Gustavo de Oliveira Nascimento – RM558986
+* Lucas Kenji Kikuchi – RM554424
+
+---
+
+## Referências
+
+* [Awesome README Templates](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+* [Awesome README](https://github.com/matiassingers/awesome-readme)
+* [How to write a Good README](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
+
+---
