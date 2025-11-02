@@ -295,24 +295,6 @@ erDiagram
     }
 ```
 
-```sql
-CREATE DATABASE IF NOT EXISTS sensor_table;
-USE sensor_table;
-
-DROP TABLE IF EXISTS dados_moto_sensor;
-
-CREATE TABLE dados_moto_sensor (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_sensor VARCHAR(255),
-    id_moto VARCHAR(255),
-    setor VARCHAR(255),
-    observacao TEXT,
-    estado VARCHAR(100),
-    timestamp_millis BIGINT,
-    data_hora_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
 **Função**: armazenar todos os registros publicados pelos sensores das motos, permitindo auditoria, relatórios e acompanhamento histórico.
 
 ---
@@ -353,8 +335,6 @@ CREATE TABLE dados_moto_sensor (
                                  ├──► Reparo Simples
                                  └──► Sem Placa
 ```
-
----
 
 ### **Graph Chart – Dados no Banco**
 
