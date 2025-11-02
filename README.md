@@ -303,10 +303,10 @@ erDiagram
 
 ```mermaid
 graph TD
-    A["id_sensor: SENS001"] --> B["id_moto: MOTO45124"]
-    B --> C["setor: Recuperacao"]
+    A["id_sensor: 02122"] --> B["id_moto: 55233"]
+    B --> C["setor: Danos Estruturais"]
     C --> D["estado: Parada"]
-    D --> E["timestamp_millis: 1730558752"]
+    D --> E["timestamp_millis: 45247"]
     E --> F["data_hora_registro: NOW"]
 ```
 
