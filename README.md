@@ -58,14 +58,20 @@ Em resumo, o Mottu Mottion fornece às equipes de gestão e operação logístic
 * Detecta movimentações e mudanças de setor.
 * Publica dados JSON no broker MQTT:
 
+**Broker:** `broker.hivemq.com`
+**Tópico:** `iot/mottu-mottion/status`
+
 ```json
 {
   "id_sensor": "01111",
   "id_moto": "45124",
   "setor": "Agendada para manutenção",
-  "timestamp": 123456789
+  "timestamp": 37525,
+  "estado": "Parada"
 }
 ```
+
+Esses dados são decodificados e enviados para os próximos nós do fluxo.
 
 * Recebe comandos de alteração de LEDs via MQTT.
 * LEDs coloridos indicam status de cada moto por setor.
@@ -82,6 +88,33 @@ Em resumo, o Mottu Mottion fornece às equipes de gestão e operação logístic
 | Bordô        | Motor com defeito        |
 
 ---
+
+Perfeito ✅
+Aqui vai uma **versão resumida e direta**, ideal para colocar no seu README (mantendo o mesmo estilo e linguagem técnica):
+
+---
+
+## Por que Node-RED
+
+O **Node-RED** é uma ferramenta de **programação visual para IoT**, criada pela IBM, que permite integrar dispositivos, APIs e bancos de dados em fluxos lógicos.
+Ele foi escolhido por unir **simplicidade, flexibilidade e poder de integração** — ideal para sistemas de monitoramento em tempo real.
+
+No projeto **Mottu Mottion**, o Node-RED atua como o **cérebro da aplicação**, sendo responsável por:
+
+* Receber dados MQTT dos sensores ESP32;
+* Processar e armazenar informações no MySQL;
+* Atualizar dashboards em tempo real;
+* Enviar notificações e comandos automáticos aos dispositivos.
+
+**Vantagens:**
+
+* Comunicação em tempo real via MQTT
+* Dashboards integrados e personalizáveis
+* Programação visual + lógica em JavaScript
+* Fácil integração com bancos e APIs
+
+Em resumo, o Node-RED foi escolhido por oferecer uma **plataforma completa e leve** para conectar, processar e visualizar dados IoT em tempo real.
+
 
 ### 2. Node-RED
 
@@ -252,3 +285,115 @@ O projeto **Mottu Mottion** não foi apenas uma solução técnica de IoT, Node-
 * [How to write a Good README](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
 
 ---
+
+
+## Visão Geral do Fluxo
+
+O sistema faz a integração entre dispositivos IoT (sensores Bluetooth nas motos Mottu) e uma base de dados central via MQTT + MySQL, exibindo os dados em dashboards e notificando conforme o setor.
+
+### Fluxo resumido:
+
+1. **Entrada MQTT** recebe mensagens do tópico `iot/mottu-mottion/status`.
+2. **Inserção MySQL** salva os dados no banco `sensor_table`.
+3. **Dashboard e Notificações** são atualizados em tempo real.
+4. **Contagem e separação por setor** organizam os dados para relatórios e ações automáticas.
+
+---
+
+## Estrutura do Banco de Dados
+
+```sql
+CREATE DATABASE IF NOT EXISTS sensor_table;
+USE sensor_table;
+
+DROP TABLE IF EXISTS dados_moto_sensor;
+
+CREATE TABLE dados_moto_sensor (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_sensor VARCHAR(255),
+    id_moto VARCHAR(255),
+    setor VARCHAR(255),
+    observacao TEXT,
+    estado VARCHAR(100),
+    timestamp_millis BIGINT,
+    data_hora_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+**Função**: armazenar todos os registros publicados pelos sensores das motos, permitindo auditoria, relatórios e acompanhamento histórico.
+
+---
+
+## Fluxo Node-RED (Explicação por Blocos)
+
+| Bloco                   | Função                                              | Saída / Destino                                         |
+| ----------------------- | --------------------------------------------------- | ------------------------------------------------------- |
+| **Entrada MQTT**        | Recebe dados do tópico `iot/mottu-mottion/status`   | Envia para Debug, MySQL e Funções                       |
+| **Debug MQTT**          | Mostra no console para verificação                  | —                                                       |
+| **Insert MySQL**        | Formata e insere dados no banco `dados_moto_sensor` | → MySQL DB                                              |
+| **MySQL DB**            | Conexão com o banco de dados                        | → Dashboard e Dado Moto                                 |
+| **Dado Moto**           | Centraliza informações das motos                    | → Dashboard + Notificação Setor                         |
+| **Notificação Setor**   | Envia alertas conforme o setor                      | —                                                       |
+| **Contar por Setor**    | Faz contagem total de motos por setor               | → Separar por Setor                                     |
+| **Separar por Setor**   | Direciona os dados conforme o setor                 | → Quatro saídas (manutenção, danos, reparos, sem placa) |
+| **Dashboard - Motos**   | Exibe visualmente o status das motos                | —                                                       |
+| **Atualizar a cada 5s** | Atualiza o dashboard periodicamente                 | —                                                       |
+
+---
+
+## Diagramas Propostos
+
+### **Fluxo Geral (Flow Chart)**
+
+```
+[Sensor IoT]
+     ↓
+[Broker MQTT (HiveMQ)]
+     ↓
+[Entrada MQTT Node-RED]
+ ├──► [Debug MQTT]
+ ├──► [Insert MySQL] ─► [MySQL DB] ─► [Dashboard - Motos]
+ ├──► [Dado Moto] ─► [Notificação Setor]
+ └──► [Contar por Setor] ─► [Separar por Setor]
+                                 ├──► Agendada p/ Manutenção
+                                 ├──► Danos Estruturais
+                                 ├──► Reparo Simples
+                                 └──► Sem Placa
+```
+
+---
+
+### **Graph Chart – Dados no Banco**
+
+```mermaid
+graph TD
+A[id_sensor:01111] --> B[id_moto:45124]
+B --> C[setor: Agendada para manutenção]
+C --> D[estado: Parada]
+D --> E[timestamp_millis: 37525]
+E --> F[data_hora_registro: NOW()]
+```
+
+---
+
+### **Fluxo de Atualização do Dashboard**
+
+```mermaid
+sequenceDiagram
+Sensor ->> MQTT Broker: Publish status JSON
+MQTT Broker ->> Node-RED: Forward message
+Node-RED ->> MySQL: Insert record
+Node-RED ->> Dashboard: Update status in real time
+Dashboard ->> User: Display moto info
+```
+
+---
+
+## Benefícios do Fluxo
+
+* Comunicação **em tempo real** com as motos.
+* Registro completo em **banco de dados SQL**.
+* **Visualização interativa** no Dashboard Node-RED.
+* **Automação de alertas** e separação lógica por setor.
+* Base sólida para **analytics e relatórios de manutenção**.
+
