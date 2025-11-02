@@ -1,6 +1,6 @@
 # Mottu Mottion – Rastreamento de Motos com IoT, Node-RED e MySQL
 
-![Logo](https://chatgpt.com/s/m_6907ae3bd9e08191aec136d7df8afdc3)
+![Logo](https://chatgpt.com/backend-api/estuary/public_content/enc/eyJpZCI6Im1fNjkwN2FlM2JkOWUwODE5MWFlYzEzNmQ3ZGY4YWZkYzM6ZmlsZV8wMDAwMDAwMDBlYzQ3MWY1YjA4ZWMxM2MyMWJhMjVkMSIsInRzIjoiMjAzOTQiLCJwIjoicHlpIiwiY2lkIjoiMSIsInNpZyI6ImUxNjE2N2M2NTE0MTA4NGY3NDQ3ZTQxMjRhNjY4NzM0NmE1ODdkYTU3ZGM0ZDdjNGEwZmIyMmRiZDMyNDQwMDEiLCJ2IjoiMCIsImdpem1vX2lkIjpudWxsLCJjcCI6bnVsbCwibWEiOm51bGx9)
 
 O Mottu Mottion é um sistema de rastreamento e gestão de motos desenvolvido para otimizar a operação da empresa de aluguel de motos Mottu. O projeto integra IoT, Node-RED e MySQL, oferecendo uma solução completa para monitoramento e controle da frota em tempo real nos pátios da Mottu.
 
