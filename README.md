@@ -183,6 +183,40 @@ npm run deploy
 
 ---
 
+## Integração com Outras Disciplinas
+
+O projeto **Mottu Mottion** não foi apenas uma solução técnica de IoT, Node-RED e MySQL, mas também uma oportunidade de integrar conceitos e práticas de várias disciplinas do curso, tornando o sistema mais completo e profissional.
+
+### 1. API (Application Programming Interface)
+
+| Integração                   | Como o Código Funciona                                                                                                                                            | Próximos Passos                                                                                             |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| API de Ingestão de Dados     | A função espera a chegada de dados de cada moto (`msg.payload`) via MQTT Input ou HTTP Input. Esta entrada atua como API para receber dados dos dispositivos IoT. | Implementar endpoints REST ou WebSocket para integração futura com apps externos.                           |
+| API de Consulta (Middleware) | O Node-RED armazena e processa o estado do dashboard (`flow.set("dashboard", estado)`), funcionando como uma API interna.                                         | Disponibilizar o estado consolidado via HTTP Response ou WebSocket para apps mobile ou dashboards externos. |
+
+### 2. Banco de Dados
+
+| Integração          | Como o Código Funciona                                                                                   | Próximos Passos                                                                                               |
+| ------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Estado em Memória   | O Node-RED utiliza `flow.set()` e `flow.get()` para manter o estado persistente temporário do dashboard. | Para persistência de longo prazo, integrar com MySQL ou outros bancos relacionais/NoSQL.                      |
+| Histórico e Análise | O array `estado.historico` armazena os últimos 100 eventos.                                              | Armazenar dados críticos em banco relacional ou de séries temporais (como InfluxDB) para análises históricas. |
+
+### 3. Aplicação Web e Mobile
+
+| Integração    | Como o Código Funciona                                                                 | Próximos Passos                                                                      |
+| ------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Web Dashboard | O `ui_template` consome a saída da função e exibe métricas e contadores em tempo real. | Atender necessidade de monitoramento via web.                                        |
+| App Mobile    | O objeto `estado` gerado pelo Node-RED funciona como "fonte da verdade" do sistema.    | Desenvolver app mobile (React Native, Flutter) consumindo a API de consulta em JSON. |
+
+### 4. DevOps (Development and Operations)
+
+| Integração               | Como o Código Funciona                                                            | Próximos Passos                                                                               |
+| ------------------------ | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Código e Versionamento   | Os fluxos Node-RED e códigos JavaScript são criados diretamente na interface web. | Armazenar arquivos `.json` do fluxo em Git/GitHub para versionamento, colaboração e rollback. |
+| Implantação (Deployment) | Deploy é feito diretamente pelo botão "Deploy" do Node-RED.                       | Rodar Node-RED em container Docker para CI/CD e ambientes de produção padronizados.           |
+| Monitoramento            | Uso de `node.warn()` permite depuração e alerta em tempo real.                    | Integrar logs e alertas em ferramentas centralizadas (Prometheus/Grafana ou ELK Stack).       |
+
+
 ## Aprendizados
 
 * Integração IoT + Node-RED + MySQL sem APIs intermediárias.
