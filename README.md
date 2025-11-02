@@ -307,7 +307,7 @@ graph TD
     B --> C[setor: Recuperação]
     C --> D[estado: Parada]
     D --> E[timestamp_millis: 1730558752]
-    E --> F[data_hora_registro: NOW()]
+    E --> F[data_hora_registro: NOW]
 ```
 
 ---
