@@ -1,8 +1,0 @@
-# Wokwi Library List
-# See https://docs.wokwi.com/guides/libraries
-
-PubSubClient
-DHT sensor library for ESPx
-ArduinoJson
-LiquidCrystal I2C
-Adafruit Unified Sensor
