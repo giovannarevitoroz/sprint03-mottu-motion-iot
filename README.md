@@ -29,7 +29,7 @@ Em resumo, o Mottu Mottion fornece às equipes de gestão e operação logístic
 
 ## Demonstração
 
-* Vídeo: [Link do vídeo](#)
+* Vídeo: [Link do vídeo](https://youtu.be/-AFyNE10Ls8)
 * Simuladores Wokwi:
 
   * [Sensor 1](https://wokwi.com/projects/446531558567289857)
